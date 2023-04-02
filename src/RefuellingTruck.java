@@ -7,6 +7,9 @@
  *
  * @author chery
  */
+import java.util.concurrent.locks.Lock;
+
+
 public class RefuellingTruck {
     
 }

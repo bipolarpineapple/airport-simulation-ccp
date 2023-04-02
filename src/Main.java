@@ -14,6 +14,12 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        
+        Airplane A1 = new Airplane(100);
+        A1.start();
+        Airplane A2 = new Airplane(200);
+        A2.start();
+
     }
     
 }

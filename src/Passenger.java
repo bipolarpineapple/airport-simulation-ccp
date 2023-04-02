@@ -7,6 +7,6 @@
  *
  * @author chery
  */
-public class Gate {
+public class Passenger {
     
 }
