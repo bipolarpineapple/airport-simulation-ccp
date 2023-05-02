@@ -8,60 +8,42 @@
  * @author chery
  */
 
-import java.util.Random;
-import java.util.concurrent.BlockingQueue;
-
 public class Airplane extends Thread {
     
-    private long id;
-    private int gateNumber;
-    private boolean landed;
-    Passenger passenger;
-    ControlTower control;
-    RefuellingTruck refuel;
-    SanityCheck check;
-    private Random random;
+    private static int nextId = 1;
+    private final int id;
+    private final boolean emergency;
+    private Airport ap;
     
     //Constructor
-    public Airplane(long id) {
-        this.id = id;
-        this.random = new Random();
+    public Airplane(Airport ap, boolean emergency) {
+        this.id = nextId++;
+        this.ap = ap;
+        this.emergency = emergency;
     }
-        
-    @Override
-    public void run() {
-        try {
-            Thread.sleep(random.nextInt(3000)); //wait for a random tiem to simulate arrival time
-            System.out.println("Airplane " + id + " has arrived.");
-            control.getInstance().notifyPilot(this); //notify control tower
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-    
+           
     //getter and setter
+    @Override
     public long getId() {
         return id;
     }
     
-    public void setId(long id) {
-        this.id = id;
+    public boolean isEmergency() {
+        return emergency;
     }
     
-    public int getGateNumber() {
-        return gateNumber;
+    public Airport getAirport() {
+        return ap;
     }
     
-    public void setGateNumber(int gateNumber) {
-        this.gateNumber = gateNumber;
+    public void setAirport(Airport airport) {
+        this.ap = airport;
     }
     
-    public boolean getLanded() {
-        return landed;
-    }
-    
-    public void setLanded(boolean landed) {
-        this.landed = landed;
+    @Override
+    public void run() {
+        System.out.printf("Airplane %d is arriving...\n", this.getId());
+        ap.addPlane(this);
     }
  }
 

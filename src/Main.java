@@ -14,12 +14,22 @@ public class Main {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        Airport ap = new Airport();
         
-        Airplane A1 = new Airplane(100);
-        A1.start();
-        Airplane A2 = new Airplane(200);
-        A2.start();
-
+        for (int i = 1; i <= 6; i++) {
+            AirplaneGenerator ag;
+            
+            if (i == 6) {
+                ag = new AirplaneGenerator(ap, "Aeroplane + " + i, true);
+                
+            } else {
+                ag = new AirplaneGenerator(ap, "Aeroplane + " + i, false);
+                
+            }
+            
+            ag.start();
+        }
+        
     }
     
 }
