@@ -30,13 +30,21 @@ public class Airport {
     }
     
     public void addPlane(Airplane plane) {
-        pq.offer(plane);
+        // add locks signal planeCondtion 
+        try {
+            lock.lock();
+            planeCondition.signal();
+            pq.offer(plane);
+        } finally {
+            lock.unlock();
+        }
+
     }
     
     public void landPlanes() {
         try {
             lock.lock();
-            while(gate.getCurrentCapacity() < 3 && !runway.isVacant()) {
+            while(gate.getCurrentCapacity() == 3 || !runway.isVacant()) {
                 planeCondition.await();
             }
             
@@ -52,36 +60,37 @@ public class Airport {
 
     }
     
-    public void startWorking() {
-        for (int i = 0; i < 6; i++) {
-            if (!pq.isEmpty())
-                this.landPlanes();
-        }
+    public void refuel() {
+        
+        gate.refuelAirplane();
+        
     }
     
-//    public void assignGate() {
-//        
-//        LinkedBlockingQueue<Gate> gates = new LinkedBlockingQueue<>();
-//        Runway r = new Runway();
-//        for (int i =0; i < NUM_GATES; i++) {
-//            gates.offer(new Gate(i));
-//        }
-//        
-//        while(!pq.isEmpty()) {
-//            Airplane p = pq.poll();
-//            if (p.isEmergency()) {
-//                System.out.println("Emergency Plane " + p.getId() + " is landing!");
-//                r.landPlanes(pq, gates);
-//                break;
-//            } else {
-//                System.out.println("Plane " + p.getId() + " is waiting to land!");
-//                r.landPlanes(pq, gates);
-//            }
-//        }
-//        
-//        while(!gates.isEmpty()) {
-//            r.releasePlanes(pq, gates);
-//        }
-//    }
+    public void disembarkPassenger() {
+        
+        gate.disembarkPassengers();
+    }
     
+    public void embarkPassenger() {
+        
+        gate.embarkPassengers();
+    }
+    
+    public void embarkPlanes() {
+        try {
+            lock.lock();
+            while (!runway.isVacant()) {
+                planeCondition.await();
+            }
+            
+            Airplane ap = gate.leaveGate();
+            runway.departPlanes(ap);
+            planeCondition.signal();
+            
+        } catch (InterruptedException iex) {
+            iex.printStackTrace();
+        } finally {
+            lock.unlock();
+        }
+    }
 }

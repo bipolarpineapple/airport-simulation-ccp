@@ -29,8 +29,25 @@ public class Runway {
         lock.lock();
         try {
             TimeUnit.SECONDS.sleep((long)rand.nextInt(3));
-            System.out.println("Airplane " + ap.getName() + " is landing on the runway..");
+            System.out.println("Airplane " + ap.getId() + " is landing on the runway..");
             isVacant = false;
+            
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        } finally {
+            lock.unlock();
+            System.out.println("Airplane " + ap.getId() + " has left the runway...");
+            isVacant = true;
+        }
+    }
+    
+    public void departPlanes(Airplane ap) {
+        lock.lock();
+        try {
+            isVacant = false;
+            TimeUnit.SECONDS.sleep((long)rand.nextInt(3));
+            System.out.println("Airplane " + ap.getId() + " has departed through the runway...");
+            isVacant = true;
             
         } catch (InterruptedException ex) {
             ex.printStackTrace();
@@ -38,21 +55,7 @@ public class Runway {
             lock.unlock();
         }
     }
-    
-//    public void releasePlanes(PriorityBlockingQueue<Airplane> pq, LinkedBlockingQueue<Gate> gates) {
-//        try{
-//            lock.lock();
-//            Gate g = gates.take();
-//            Airplane p = g.releasePlane();
-//            System.out.println("Plane " + p.getId() + " is landing at Gate " + g.getId());
-//            p.setGate(null);
-//        } catch (InterruptedException ex) {
-//            ex.printStackTrace();
-//        } finally {
-//            lock.unlock();
-//        }
-//    }
-    
+        
     public boolean isVacant() {
         return this.isVacant;
     }

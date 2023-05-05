@@ -20,7 +20,7 @@ public class Main {
             AirplaneGenerator ag;
             
             if (i == 6) {
-                ag = new AirplaneGenerator(ap, "Aeroplane + " + i, true);
+                ag = new AirplaneGenerator(ap, "Emergency Aeroplane + " + i, true);
                 
             } else {
                 ag = new AirplaneGenerator(ap, "Aeroplane + " + i, false);
