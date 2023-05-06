@@ -93,4 +93,9 @@ public class Airport {
             lock.unlock();
         }
     }
+    
+    public void inspectGate() {
+        gate.inspectGate();
+    }
+    
 }

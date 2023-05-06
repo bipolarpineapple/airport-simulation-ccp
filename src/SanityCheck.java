@@ -9,4 +9,7 @@
  */
 public class SanityCheck {
     
+    private Gate gate;
+    
+    
 }

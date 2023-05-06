@@ -58,17 +58,14 @@ public class Airplane extends Thread {
             System.out.printf("Airplane %d is arriving...\n", this.getId());
         }
         ap.addPlane(this);
-//        ap.landPlanes();
-        
+
         Thread instruction = new Thread(() -> {
             ap.landPlanes();
             ap.disembarkPassenger();
             ap.refuel();
             ap.embarkPassenger();
             ap.embarkPlanes();
-            // add more operations
-        });
-        
+        }); 
         instruction.start();
     }
     

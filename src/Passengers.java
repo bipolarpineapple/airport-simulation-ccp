@@ -20,7 +20,7 @@ public class Passengers {
         for (int i = 1; i <= this.PASSENGER_COUNT; i++) {
             try {
                 System.out.println("Passenger " + i + " has embarked the Airplane " + ap.getId());
-                Thread.sleep(50);
+                Thread.sleep(300);
             } catch (InterruptedException iex) {
                 iex.printStackTrace();
             }
@@ -31,7 +31,7 @@ public class Passengers {
         for (int i = 1; i <= this.PASSENGER_COUNT; i++) {
             try {
                 System.out.println("Passenger " + i + " has disembarked from Airplane " + ap.getId());
-                Thread.sleep(50);
+                Thread.sleep(300);
             } catch (InterruptedException iex) {
                 iex.printStackTrace();
             }

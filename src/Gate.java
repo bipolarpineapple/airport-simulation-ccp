@@ -54,14 +54,7 @@ public class Gate {
         }
     }
     
-//    public void manageAirplane() {
-//        Airplane ap = airplaneQueue.poll();
-//        ap.disembarkPassengers();
-//        rt.refuelAirplane(ap);
-//        embarkedAirplaneQueue.offer(ap);
-//        
-//    }
-    
+   
     public void disembarkPassengers() {
         Airplane ap = airplaneQueue.poll();
         ap.disembarkPassengers();
@@ -91,6 +84,18 @@ public class Gate {
             lock.unlock();
         }
 
+    }
+    
+    public void inspectGate() {
+        try {
+            System.out.println("ATC manager is inspecting the airport...");
+            TimeUnit.SECONDS.sleep((long)rand.nextInt(2));
+            if (airplaneQueue.isEmpty() && embarkingAirplaneQueue.isEmpty() && embarkedAirplaneQueue.isEmpty() && refuellingAirplaneQueue.isEmpty()) {
+                System.out.println("ATC manager has confirmed that the airport is empty...");
+            }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Gate.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }
