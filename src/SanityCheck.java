@@ -9,7 +9,28 @@
  */
 public class SanityCheck {
     
-    private Gate gate;
+    private Airplane ap;
+    private AirplaneGenerator ag;
+    private int waitingTime;
+    private Passengers p;
+    private Gate g;
+    private int numPlanes;
+    private int numPasengers;
     
+    public SanityCheck() {
+        
+    }
+       
+    public void calculateWaitingTime() {
+        
+    }
+    
+    public void calculateNumPlanes() {
+        
+    }
+    
+    public void calculateNumPassengers() {
+      //p.getTotalPassengers();
+    }
     
 }

@@ -19,18 +19,28 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 public class Gate {
  
+    //record the maximum capacity of the airport gates
     private int maxCapacity = 3;
+    
+    //count the current capacity
     private int currentCapacity;
+    
+    //Blocking Queues for airplanes within situations while in gate
     ArrayBlockingQueue<Airplane> airplaneQueue = new ArrayBlockingQueue<>(3);
     ArrayBlockingQueue<Airplane> embarkedAirplaneQueue = new ArrayBlockingQueue<>(3);
     ArrayBlockingQueue<Airplane> embarkingAirplaneQueue = new ArrayBlockingQueue<>(3);
     ArrayBlockingQueue<Airplane> refuellingAirplaneQueue = new ArrayBlockingQueue<>(3);
     
+    //To lock the gates
     ReentrantLock lock = new ReentrantLock();
     Condition gateCondition = lock.newCondition();
     Random rand = new Random();
     RefuellingTruck rt = new RefuellingTruck();
-        
+    ControlTower ct = new ControlTower();
+    private int durationGate;
+    private int durationInspect;
+    
+    //getter and setter for capacity
     public int getCurrentCapacity() {
         return currentCapacity;
     }
@@ -41,10 +51,14 @@ public class Gate {
     
     public void enterGate(Airplane ap) {
         try {
+            //lock the gate
             lock.lock();
+            //increase the current capacity of the airport gates
             currentCapacity++;
+            //Offer the airplane into the airplaneQueue
             airplaneQueue.offer(ap);
-            TimeUnit.SECONDS.sleep((long)rand.nextInt(3));
+            durationGate = rand.nextInt(3);
+            TimeUnit.SECONDS.sleep((long)durationGate);
             System.out.println("Airplane " + ap.getId() + " is entering a gate...");
             
         } catch (InterruptedException ex) {
@@ -70,6 +84,8 @@ public class Gate {
     public void refuelAirplane() {
         Airplane ap = refuellingAirplaneQueue.poll();
         rt.refuelAirplane(ap);
+        ct.cleanAirplane(ap);
+        ct.refillSupplies(ap);
         embarkingAirplaneQueue.offer(ap);
     }
     
@@ -88,8 +104,8 @@ public class Gate {
     
     public void inspectGate() {
         try {
-            System.out.println("ATC manager is inspecting the airport...");
-            TimeUnit.SECONDS.sleep((long)rand.nextInt(2));
+            durationInspect = rand.nextInt(2);
+            TimeUnit.SECONDS.sleep((long)durationInspect);
             if (airplaneQueue.isEmpty() && embarkingAirplaneQueue.isEmpty() && embarkedAirplaneQueue.isEmpty() && refuellingAirplaneQueue.isEmpty()) {
                 System.out.println("ATC manager has confirmed that the airport is empty...");
             }

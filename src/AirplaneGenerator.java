@@ -16,18 +16,21 @@ public class AirplaneGenerator extends Thread {
     private final Airport airport;
     private final String planeName;
     private final boolean emergencyLanding;
+    private int duration;
+    private int durationCounter;
 
     public AirplaneGenerator(Airport airport, String planeName, boolean emergencyLanding) {
         this.airport = airport;
         this.planeName = planeName;
         this.emergencyLanding = emergencyLanding;
     }
-
+    
     @Override
     public void run() {
         try {
-            TimeUnit.SECONDS.sleep((long) rand.nextInt(4));
-
+            duration = rand.nextInt(4);
+            TimeUnit.SECONDS.sleep((long) duration);
+            
         } catch (InterruptedException iex) {
             iex.printStackTrace();
         }
@@ -35,7 +38,6 @@ public class AirplaneGenerator extends Thread {
         Airplane airplane = new Airplane(airport, emergencyLanding);
         airplane.start();
 
-        
 
     }
 

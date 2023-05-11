@@ -15,7 +15,12 @@ public class Main {
     public static void main(String[] args) {
         // TODO code application logic here
         Airport ap = new Airport();
+        SanityCheck sc = new SanityCheck();
         
+        System.out.println("ATC manager is checking the airport's condition...");
+        System.out.println("Airplanes are safe to land...");
+        
+        //Call 6 airplanes: 5 normal flights, 1 with emergency landing
         for (int i = 1; i <= 6; i++) {
             AirplaneGenerator ag;
             

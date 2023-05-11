@@ -8,7 +8,6 @@
  * @author wyeye
  */
 import java.util.Comparator;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -94,8 +93,7 @@ public class Airport {
         }
     }
     
-    public void inspectGate() {
+    public void inspectGates() {
         gate.inspectGate();
     }
-    
 }
