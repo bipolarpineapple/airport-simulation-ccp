@@ -25,6 +25,9 @@ public class Gate {
     //count the current capacity
     private int currentCapacity;
     
+    // gate ids
+    ArrayBlockingQueue<String> gateIds = new ArrayBlockingQueue<>(3, true);
+    
     //Blocking Queues for airplanes within situations while in gate
     ArrayBlockingQueue<Airplane> airplaneQueue = new ArrayBlockingQueue<>(3);
     ArrayBlockingQueue<Airplane> embarkedAirplaneQueue = new ArrayBlockingQueue<>(3);
@@ -39,6 +42,12 @@ public class Gate {
     ControlTower ct = new ControlTower();
     private int durationGate;
     private int durationInspect;
+    
+    public Gate() {
+        for (int i = 1; i <= 3; i++) {
+            gateIds.offer(String.valueOf(i));
+        }
+    }
     
     //getter and setter for capacity
     public int getCurrentCapacity() {
@@ -55,11 +64,15 @@ public class Gate {
             lock.lock();
             //increase the current capacity of the airport gates
             currentCapacity++;
+            
             //Offer the airplane into the airplaneQueue
+            String enterGateId = gateIds.poll();
+            ap.enterGate(enterGateId);
+            
             airplaneQueue.offer(ap);
             durationGate = rand.nextInt(3);
             TimeUnit.SECONDS.sleep((long)durationGate);
-            System.out.println("Airplane " + ap.getId() + " is entering a gate...");
+            System.out.println("Airplane " + ap.getId() + " is entering Gate " + ap.getEnteredGate() + "...");
             
         } catch (InterruptedException ex) {
             Logger.getLogger(Gate.class.getName()).log(Level.SEVERE, null, ex);
@@ -67,7 +80,6 @@ public class Gate {
             lock.unlock();
         }
     }
-    
    
     public void disembarkPassengers() {
         Airplane ap = airplaneQueue.poll();
@@ -93,25 +105,16 @@ public class Gate {
         try {
             lock.lock();
             Airplane ap = embarkedAirplaneQueue.poll();
-            System.out.println("Airplane " + ap.getId() + " is going for take off...");
+            String gateEnterId = ap.getEnteredGate();
+            System.out.println("Airplane " + ap.getId() + " is leaving from Gate " + gateEnterId + " and is going for take off...");
+            gateIds.offer(gateEnterId);
+            
             currentCapacity--;
             return ap;
         } finally {
             lock.unlock();
         }
 
-    }
-    
-    public void inspectGate() {
-        try {
-            durationInspect = rand.nextInt(2);
-            TimeUnit.SECONDS.sleep((long)durationInspect);
-            if (airplaneQueue.isEmpty() && embarkingAirplaneQueue.isEmpty() && embarkedAirplaneQueue.isEmpty() && refuellingAirplaneQueue.isEmpty()) {
-                System.out.println("ATC manager has confirmed that the airport is empty...");
-            }
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Gate.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
 }

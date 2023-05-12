@@ -7,6 +7,7 @@
  *
  * @author wyeye
  */
+import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.locks.Condition;
@@ -22,10 +23,14 @@ public class Airport {
     private final Comparator<Airplane> comparePlanes = Comparator.comparing(Airplane::isEmergency).reversed();
     private PriorityBlockingQueue<Airplane> pq = new PriorityBlockingQueue(6, comparePlanes);
     
+    private final int totalPlanesScheduled;
+    private int totalPlanesServed = 0;
+    
     ReentrantLock lock = new ReentrantLock();
     Condition planeCondition = lock.newCondition();
     
-    public Airport() {
+    public Airport(int totalPlanesScheduled) {
+        this.totalPlanesScheduled = totalPlanesScheduled;
     }
     
     public void addPlane(Airplane plane) {
@@ -48,6 +53,8 @@ public class Airport {
             }
             
             Airplane ap = pq.poll();
+            ap.setEndTime(LocalTime.now());
+            
             runway.landPlanes(ap);
             gate.enterGate(ap);
             
@@ -84,6 +91,25 @@ public class Airport {
             
             Airplane ap = gate.leaveGate();
             runway.departPlanes(ap);
+            totalPlanesServed++;
+            SanityCheck.totalPlanesServed++;
+            System.out.println("==================================");
+            System.out.println("Individual Airplane Statistics");
+            System.out.println("----------------------------------");
+            SanityCheck.allSanityChecks.add(ap.getStatistics());
+
+            if (totalPlanesServed == totalPlanesScheduled) {
+                // if the plane is the last plane 
+                
+                SanityCheck.printAllSanityChecks();
+                
+                if (gate.getCurrentCapacity() == 0) {
+                    System.out.println("Available gate count: " + (3 - gate.getCurrentCapacity()));
+                    System.out.println("The gates are all empty!");
+                    
+                }
+            }
+            
             planeCondition.signal();
             
         } catch (InterruptedException iex) {
@@ -91,9 +117,5 @@ public class Airport {
         } finally {
             lock.unlock();
         }
-    }
-    
-    public void inspectGates() {
-        gate.inspectGate();
     }
 }

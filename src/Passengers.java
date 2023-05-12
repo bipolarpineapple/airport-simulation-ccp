@@ -21,10 +21,6 @@ public class Passengers {
         this.ap = ap;
     }
     
-//    public int getTotalPassengers() {
-//         return totalPassengers;
-//    }
-    
     public void embark() {
         for (int i = 1; i <= this.PASSENGER_COUNT; i++) {
             try {
@@ -36,6 +32,8 @@ public class Passengers {
                 iex.printStackTrace();
             }
         }
+        
+        ap.recordPassengersEmbarked(PASSENGER_COUNT);
     }
     
     public void disembark() {
@@ -51,6 +49,8 @@ public class Passengers {
 
             
         }
+        
+        ap.recordPassengersDisembarked(PASSENGER_COUNT);
     }
     
 }

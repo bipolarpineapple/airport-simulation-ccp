@@ -1,3 +1,8 @@
+
+import java.time.LocalTime;
+import java.util.ArrayList;
+
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -15,6 +20,11 @@ public class Airplane extends Thread {
     private final boolean emergency;
     private Airport ap;
     private final Passengers ps;
+    private SanityCheck sc;
+    private String gateIdEntered;
+    
+    private LocalTime startTime;
+    private LocalTime endTime;
     
     //Constructor
     public Airplane(Airport ap, boolean emergency) {
@@ -22,6 +32,7 @@ public class Airplane extends Thread {
         this.ap = ap;
         this.emergency = emergency;
         this.ps = new Passengers(this);
+        this.sc = new SanityCheck("Airplane " + this.id);
     }
            
     //getter and setter
@@ -50,6 +61,33 @@ public class Airplane extends Thread {
         this.ps.embark();
     }
     
+    public void enterGate(String gateId) {
+        this.gateIdEntered = gateId;
+    }
+    
+    public String getEnteredGate() {
+        return gateIdEntered;
+    }
+    
+    public void recordPassengersEmbarked(int passengerCount) {
+        sc.recordTotalPassengerEmbarked(passengerCount);
+    }
+    
+    public void recordPassengersDisembarked(int passengerCount) {
+        sc.recordTotalPassengerDisembarked(passengerCount);
+    }
+    
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
+        
+        // calc waiting time and record
+        sc.calculateWaitingTime(startTime, endTime);
+    }
+    
+    public SanityCheck getStatistics() {
+        return sc;
+    }
+    
     @Override
     public void run() {
         if (emergency == true) {
@@ -57,9 +95,12 @@ public class Airplane extends Thread {
         } else {
             System.out.printf("Airplane %d is arriving...\n", this.getId());
         }
+        this.startTime = LocalTime.now();
         ap.addPlane(this);
+        
 
         Thread instruction = new Thread(() -> {
+           
             ap.landPlanes();
             ap.disembarkPassenger();
             ap.refuel();
