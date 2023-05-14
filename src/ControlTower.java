@@ -22,6 +22,7 @@ public class ControlTower {
         
     }
     
+    // Clean airplane action
     public void cleanAirplane(Airplane ap) {
         try {
             System.out.println("Control Tower has cued cleaners to clean Airplane "  + ap.getId() + "...");
@@ -34,6 +35,7 @@ public class ControlTower {
         }
     }
     
+    // Refill airplane action
     public void refillSupplies(Airplane ap) {
         try {
             System.out.println("Control Tower has cued suppliers to refill Airplane " + ap.getId() + "...");

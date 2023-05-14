@@ -81,18 +81,27 @@ public class Gate {
         }
     }
    
+    // Remove the airplane from the airplane docking queue
+    // Disembark passengers
+    // Cue the airplane for refuelling action
     public void disembarkPassengers() {
         Airplane ap = airplaneQueue.poll();
         ap.disembarkPassengers();
         refuellingAirplaneQueue.offer(ap);
     }
     
+    // Remove the airplane from the passenger embarking queue
+    // Embark passengers
+    // Add the airplane into embarked queue
     public void embarkPassengers() {
         Airplane ap = embarkingAirplaneQueue.poll();
         ap.embarkPassengers();
         embarkedAirplaneQueue.offer(ap);
     }
     
+    // Remove the airplane from the airplane refuelling queue
+    // Refuel, clean and refill supplies for airplane
+    // Add the airplane into embarking queue
     public void refuelAirplane() {
         Airplane ap = refuellingAirplaneQueue.poll();
         rt.refuelAirplane(ap);
@@ -101,6 +110,9 @@ public class Gate {
         embarkingAirplaneQueue.offer(ap);
     }
     
+    // Remove the airplane from the embarked airplane queue
+    // Airplane ready for take off
+    // Substract the capacity of the gates for the next airplane to enter 
     public Airplane leaveGate() {
         try {
             lock.lock();

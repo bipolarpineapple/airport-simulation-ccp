@@ -16,7 +16,9 @@ import java.util.ArrayList;
 public class SanityCheck {
     
     static int totalPlanesServed;
+    // Store all statistics
     static ArrayList<SanityCheck> allSanityChecks = new ArrayList<>();
+    // Decimal conversion
     private static final DecimalFormat df = new DecimalFormat("0.00");
     
     private Airplane ap;
@@ -25,24 +27,29 @@ public class SanityCheck {
     private int totalPassengersEmbarked;
     private int totalPassengersDisembarked;
     
+    // Constructor
     public SanityCheck(String planeName) {
         this.planeName = planeName;
     }
-       
+    
+    // Calculate the waiting time for airplanes
     public void calculateWaitingTime(LocalTime startTime, LocalTime endTime) {
         Duration duration = Duration.between(startTime, endTime);
         
         this.waitingTime = (int) duration.getSeconds();
     }
     
+    // Record the total number of passengers embarked
     public void recordTotalPassengerEmbarked(int totalPassengersEmbarked) {
         this.totalPassengersEmbarked = totalPassengersEmbarked;
     }
     
+    // Record the total number of passengers disembarked
     public void recordTotalPassengerDisembarked(int totalPassengersDisembarked) {
         this.totalPassengersDisembarked = totalPassengersDisembarked;
     }
     
+    // Getters
     public int getWaitingTime() {
         return this.waitingTime;
     }
@@ -59,6 +66,7 @@ public class SanityCheck {
         return this.totalPassengersDisembarked;
     }
     
+    // Calculate and print plane and passenger statistics
     static void printAllSanityChecks() {
         int maximumWaitingTime = 0;
         
@@ -68,32 +76,39 @@ public class SanityCheck {
         int totalEmbarkedPassengers = 0;
         int totalDisembarkedPassengers = 0;
         
-        // calculate max, min and average waiting time here (1st for-loop)
+        // calculate max, min and average waiting time
         for (SanityCheck planeStatistics:allSanityChecks) {
             int currentWaitingTime = planeStatistics.getWaitingTime();
             
+            System.out.println("==================================");
+            System.out.println("Individual Airplane Statistics");
+            System.out.println("----------------------------------");
             
             System.out.println("Waiting Time for " + planeStatistics.getPlaneName() + ": " + currentWaitingTime + " seconds");
             System.out.println(planeStatistics.getTotalPassengersDisembarked() + " passengers have disembarked from the airplanes...");
             System.out.println(planeStatistics.getTotalPassengersEmbarked() + " passengers have embarked the airplanes...");
             
+            // keep replacing smaller values with bigger values
             if (currentWaitingTime > maximumWaitingTime) {
                 maximumWaitingTime = currentWaitingTime;
-                
+            
+            // keep replacing bigger values with smaller values
             } else if (currentWaitingTime < minimumWaitingTime) {
                 minimumWaitingTime = currentWaitingTime;
                 
             }
-             
+            
+            // counters
             totalWaitingTime += currentWaitingTime;
             totalEmbarkedPassengers += planeStatistics.getTotalPassengersEmbarked();
             totalDisembarkedPassengers += planeStatistics.getTotalPassengersDisembarked();
             
         }
         
+        // calculate the average waiting time
         averageWaitingTime = (double) totalWaitingTime / totalPlanesServed;
         
-        // print all the stats recorded here 
+        // print all the stats recorded 
         System.out.println("====================================================");
         System.out.println("Overall Statistics");
         System.out.println("----------------------------------------------------");

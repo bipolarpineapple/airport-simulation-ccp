@@ -19,6 +19,7 @@ public class AirplaneGenerator extends Thread {
     private int duration;
     private int durationCounter;
 
+    // Constructor
     public AirplaneGenerator(Airport airport, String planeName, boolean emergencyLanding) {
         this.airport = airport;
         this.planeName = planeName;
@@ -28,6 +29,7 @@ public class AirplaneGenerator extends Thread {
     @Override
     public void run() {
         try {
+            // Generate airplanes every 0-4 seconds
             duration = rand.nextInt(4);
             TimeUnit.SECONDS.sleep((long) duration);
             
@@ -35,6 +37,7 @@ public class AirplaneGenerator extends Thread {
             iex.printStackTrace();
         }
         
+        // New airplane object
         Airplane airplane = new Airplane(airport, emergencyLanding);
         airplane.start();
 

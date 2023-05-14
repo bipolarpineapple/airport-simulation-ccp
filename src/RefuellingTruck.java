@@ -16,15 +16,18 @@ public class RefuellingTruck {
     private boolean refuelling = false;
     Random rand = new Random();
     
+    // Constructor
     public RefuellingTruck() {
         lock = new ReentrantLock();
     }
     
+    // Implement lock on the truck so that it can only be refuelling one airplane at a time
     public void refuelAirplane(Airplane ap) {
         lock.lock();
         try {
             refuelling = true;
             System.out.println("Refuelling Airplane " + ap.getId() + "...");
+            // Random refuel duration
             Thread.sleep(rand.nextInt(3000));
             System.out.println("Refuelling Truck has finished refuelling Airplane " + ap.getId());
             refuelling = false;
@@ -36,6 +39,7 @@ public class RefuellingTruck {
         }
     }
     
+    // Indicate the status of the truck
     public boolean isRefuelling() {
         return this.refuelling;
     }

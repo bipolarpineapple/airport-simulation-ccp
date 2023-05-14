@@ -20,6 +20,8 @@ public class Airport {
     private AirplaneGenerator ag;
     Gate gate = new Gate();
     Runway runway = new Runway();
+    
+    // PriorityBlockingQueue and comparator to compare the priorities based on the emergency status
     private final Comparator<Airplane> comparePlanes = Comparator.comparing(Airplane::isEmergency).reversed();
     private PriorityBlockingQueue<Airplane> pq = new PriorityBlockingQueue(6, comparePlanes);
     
@@ -29,10 +31,12 @@ public class Airport {
     ReentrantLock lock = new ReentrantLock();
     Condition planeCondition = lock.newCondition();
     
+    // Constructor for Airport
     public Airport(int totalPlanesScheduled) {
         this.totalPlanesScheduled = totalPlanesScheduled;
     }
     
+    // Add airplane into the PriorityBlockingQueue fot waiting purposes 
     public void addPlane(Airplane plane) {
         // add locks signal planeCondtion 
         try {
@@ -45,16 +49,20 @@ public class Airport {
 
     }
     
+    // Queue controlloer for Airplanes
+    // When the gates are full or the runway is being used by other airplanes, the airplanes within the queue shall wait
     public void landPlanes() {
         try {
             lock.lock();
             while(gate.getCurrentCapacity() == 3 || !runway.isVacant()) {
                 planeCondition.await();
             }
-            
+            // if the one of the gates are vacant or the runway is vacant
+            // remove the airplane from the queue and end the wait timer
             Airplane ap = pq.poll();
             ap.setEndTime(LocalTime.now());
             
+            // The airplane shall start landing and entering to the assigned gate
             runway.landPlanes(ap);
             gate.enterGate(ap);
             
@@ -66,22 +74,27 @@ public class Airport {
 
     }
     
+    // To refuel the airplane
     public void refuel() {
         
         gate.refuelAirplane();
         
     }
     
+    // To disembark the passengers within the plane
     public void disembarkPassenger() {
         
         gate.disembarkPassengers();
     }
     
+    // To embark passengers to the plane
     public void embarkPassenger() {
         
         gate.embarkPassengers();
     }
     
+    // If the runway is not vacant, the yet to depart plane has to wait
+    // After departing from the runway, statistics will be displayed
     public void embarkPlanes() {
         try {
             lock.lock();
@@ -93,9 +106,6 @@ public class Airport {
             runway.departPlanes(ap);
             totalPlanesServed++;
             SanityCheck.totalPlanesServed++;
-            System.out.println("==================================");
-            System.out.println("Individual Airplane Statistics");
-            System.out.println("----------------------------------");
             SanityCheck.allSanityChecks.add(ap.getStatistics());
 
             if (totalPlanesServed == totalPlanesScheduled) {

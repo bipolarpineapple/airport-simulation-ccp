@@ -25,6 +25,7 @@ public class Runway {
         lock = new ReentrantLock();
     }
     
+    //Lock and unlock the runway for the airplanes to land
     public void landPlanes(Airplane ap) {
         lock.lock();
         try {
@@ -41,6 +42,7 @@ public class Runway {
         }
     }
     
+    // Lock and unlock the runway for airplanes to depart
     public void departPlanes(Airplane ap) {
         lock.lock();
         try {
@@ -55,7 +57,8 @@ public class Runway {
             lock.unlock();
         }
     }
-        
+    
+    // Indicating the vacancy of the runway
     public boolean isVacant() {
         return this.isVacant;
     }

@@ -80,7 +80,7 @@ public class Airplane extends Thread {
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
         
-        // calc waiting time and record
+        // calculate waiting time and record
         sc.calculateWaitingTime(startTime, endTime);
     }
     
@@ -90,15 +90,19 @@ public class Airplane extends Thread {
     
     @Override
     public void run() {
+        // if the airplane requires emergency landing
         if (emergency == true) {
             System.out.printf("Airplane %d is arriving with emergency landing required...\n", this.getId());
+        // if the airplane is a normal flight
         } else {
             System.out.printf("Airplane %d is arriving...\n", this.getId());
         }
+        // start timing for waiting time per airplane
         this.startTime = LocalTime.now();
+        // add the plane into the queue
         ap.addPlane(this);
         
-
+        // Series of actions to be done per airplane
         Thread instruction = new Thread(() -> {
            
             ap.landPlanes();
